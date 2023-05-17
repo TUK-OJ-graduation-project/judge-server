@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import os
 import subprocess
 import sys
@@ -14,10 +14,10 @@ def run_script():
     result = subprocess.run(['python', 'script.py'], text=True, capture_output=True)
     if result.returncode != 0:
         print(result.stderr, file=sys.stderr)
-        return result.stderr
+        return jsonify({"error": result.stderr})
     else:
         print(result.stdout)
-        return '성공적으로 실행됐습니다!'
+        return jsonify({"output": result.stdout or "Executed successfully!"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
